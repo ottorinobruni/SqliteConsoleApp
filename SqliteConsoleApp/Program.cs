@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Dapper;
+using Microsoft.Data.Sqlite;
 
 class Program
 {
@@ -23,51 +24,44 @@ class Program
 
     private static void DeleteUserByName(SqliteConnection connection, string name)
     {
-        var command = connection.CreateCommand();
-        command.CommandText = "DELETE FROM user WHERE name = $name";
-        command.Parameters.AddWithValue("$name", name);
-        command.ExecuteNonQuery();
+        var sql = "DELETE FROM user WHERE name = @Name";
+        connection.Execute(sql, new { Name = name });
         Console.WriteLine($"User with name '{name}' deleted.");
     }
 
     private static void DisplayAllUsers(SqliteConnection connection)
     {
-        var command = connection.CreateCommand();
-        command.CommandText = "SELECT id, name, age FROM user";
+        var sql = "SELECT id, name, age FROM user";
+        var users = connection.Query<User>(sql);
 
-        using (var reader = command.ExecuteReader())
+        Console.WriteLine("Current users in the database:");
+        foreach (var user in users)
         {
-            Console.WriteLine("Current users in the database:");
-            while (reader.Read())
-            {
-                var id = reader.GetInt32(0);
-                var name = reader.GetString(1);
-                var age = reader.GetInt32(2);
-                Console.WriteLine($"ID: {id}, Name: {name}, Age: {age}");
-            }
+            Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Age: {user.Age}");
         }
     }
 
     private static void InsertUsers(SqliteConnection connection)
     {
-        var command = connection.CreateCommand();
-        command.CommandText =
-            @"
-                INSERT INTO user (name, age)
-                VALUES ('Otto', 30),
-                    ('Tim', 25),
-                    ('Steve', 28),
-                    ('Robert', 35);
-            ";
+        var sql = @"
+            INSERT INTO user (name, age)
+            VALUES (@Name, @Age)";
 
-        command.ExecuteNonQuery();
+        var users = new[]
+        {
+            new User { Name = "Otto", Age = 30 },
+            new User { Name = "Tim", Age = 25 },
+            new User { Name = "Steve", Age = 28 },
+            new User { Name = "Robert", Age = 35 }
+        };
+
+        connection.Execute(sql, users);
         Console.WriteLine("Users inserted.");
     }
 
     private static void CreateTable(SqliteConnection connection)
     {
-        var command = connection.CreateCommand();
-        command.CommandText =
+        var sql =
             @"
                 CREATE TABLE IF NOT EXISTS user (
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -76,7 +70,14 @@ class Program
                 );
             ";
         
-        command.ExecuteNonQuery();
+        connection.Execute(sql);
         Console.WriteLine("Table created.");
     }
+}
+
+public class User
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Age { get; set; }
 }
