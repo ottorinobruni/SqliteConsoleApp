@@ -6,7 +6,7 @@ This repository contains the source code for the SqliteConsoleApp project. The a
 The `main` branch shows the *initial* code used in the tutorial. It's the starting point.
 There are separate tags and branches for each of the all implementations that you can review or download as well. Here are links you can use to jump to these tagged versions in your browser:
 
-- [sqlite](https://github.com/ottorinobruni/SqliteConsoleApp/releases/tag/sqlite)
+©[sqlite](https://github.com/ottorinobruni/SqliteConsoleApp/releases/tag/sqlite)
 - [dapper](https://github.com/ottorinobruni/SqliteConsoleApp/releases/tag/dapper)
 
 ## Contents
@@ -21,10 +21,14 @@ There are separate tags and branches for each of the all implementations that yo
 The SqliteConsoleApp project was created as part of a comprehensive tutorial, which can be found on my blog and its corresponding video tutorial on YouTube. The application demonstrates key operations such as setting up SQLite, creating tables, inserting data, querying records, and more.
 
 ## Video Tutorial
-Watch the tutorial on YouTube for a visual walkthrough of how the project was created: [How to Integrate SQLite with .NET Console Application Using C# and VSCode](https://www.youtube.com/watch?v=5KtNnzOktw8)
+Watch the tutorial on YouTube for a visual walkthrough of how the project was created: 
+- [How to Integrate SQLite with .NET Console Application Using C# and VSCode](https://www.youtube.com/watch?v=5KtNnzOktw8)
+- [How to Integrate Dapper with .NET Console Application Using C# and VSCode](https://www.youtube.com/watch?v=ADKzZn536kU)
 
 ## Blog Article
-For further details and in-depth explanations, check out the blog article: [How to Integrate SQLite with .NET Console Application Using C# and VSCode](https://www.ottorinobruni.com/how-to-integrate-sqlite-with-net-console-application-using-csharp-and-vscode/)
+For further details and in-depth explanations, check out the blog article: 
+- [How to Integrate SQLite with .NET Console Application Using C# and VSCode](https://www.ottorinobruni.com/how-to-integrate-sqlite-with-net-console-application-using-csharp-and-vscode/)
+- [How to Integrate Dapper with .NET Console Application Using C# and VSCode](https://www.ottorinobruni.com/how-to-integrate-dapper-with-net-console-application-using-csharp-and-vscode/)
 
 ## How to Run the Project
 To run the project locally on your machine, follow these steps:
