@@ -2,6 +2,13 @@
 
 This repository contains the source code for the SqliteConsoleApp project. The aim of this project is to provide a step-by-step guide on how to integrate SQLite with a .NET console application using C# and VSCode.
 
+## Usage Instructions
+The `main` branch shows the *initial* code used in the tutorial. It's the starting point.
+There are separate tags and branches for each of the all implementations that you can review or download as well. Here are links you can use to jump to these tagged versions in your browser:
+
+- [sqlite](https://github.com/ottorinobruni/SqliteConsoleApp/releases/tag/sqlite)
+- [dapper](https://github.com/ottorinobruni/SqliteConsoleApp/releases/tag/dapper)
+
 ## Contents
 - [Project Description](#project-description)
 - [Video Tutorial](#video-tutorial)
