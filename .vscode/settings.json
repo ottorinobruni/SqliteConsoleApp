@@ -1,1 +1,3 @@
-{}
+{
+    "csharp.debug.logging.moduleLoad": false
+}

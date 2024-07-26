@@ -1,52 +1,54 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 class Program
 {
     private static void Main(string[] args)
     {
         const string databaseFile = "crm.db";
-        var connectionString = $"Data Source={databaseFile}";
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseSqlite($"Data Source={databaseFile}")
+            .Options;
 
-        using(var connection = new SqliteConnection(connectionString))
+        using (var context = new AppDbContext(options))
         {
-            connection.Open();
-            CreateTable(connection);
-            InsertUsers(connection);
-            DisplayAllUsers(connection);
-            DeleteUserByName(connection, "Otto");
-            DisplayAllUsers(connection);
+            context.Database.EnsureCreated();
+            CreateTable(context);
+            InsertUsers(context);
+            DisplayAllUsers(context);
+            DeleteUserByName(context, "Otto");
+            DisplayAllUsers(context);
         }
 
         File.Delete(databaseFile);
         System.Console.WriteLine("Database file deleted!");
     }
 
-    private static void DeleteUserByName(SqliteConnection connection, string name)
+    private static void DeleteUserByName(AppDbContext context, string name)
     {
-        var sql = "DELETE FROM user WHERE name = @Name";
-        connection.Execute(sql, new { Name = name });
-        Console.WriteLine($"User with name '{name}' deleted.");
+        var user = context.Users.SingleOrDefault(u => u.Name == name);
+        if (user != null)
+        {
+            context.Users.Remove(user);
+            context.SaveChanges();
+            Console.WriteLine($"User with name '{name}' deleted.");
+        }
     }
 
-    private static void DisplayAllUsers(SqliteConnection connection)
+    private static void DisplayAllUsers(AppDbContext context)
     {
-        var sql = "SELECT id, name, age FROM user";
-        var users = connection.Query<User>(sql);
-
+        var users = context.Users;
         Console.WriteLine("Current users in the database:");
+        
         foreach (var user in users)
         {
             Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Age: {user.Age}");
         }
     }
 
-    private static void InsertUsers(SqliteConnection connection)
+    private static void InsertUsers(AppDbContext context)
     {
-        var sql = @"
-            INSERT INTO user (name, age)
-            VALUES (@Name, @Age)";
-
         var users = new[]
         {
             new User { Name = "Otto", Age = 30 },
@@ -55,24 +57,23 @@ class Program
             new User { Name = "Robert", Age = 35 }
         };
 
-        connection.Execute(sql, users);
+        context.Users.AddRange(users);
+        context.SaveChanges();
         Console.WriteLine("Users inserted.");
     }
 
-    private static void CreateTable(SqliteConnection connection)
+    private static void CreateTable(AppDbContext context)
     {
-        var sql =
-            @"
-                CREATE TABLE IF NOT EXISTS user (
-                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    age INTEGER NOT NULL
-                );
-            ";
-        
-        connection.Execute(sql);
+        // Table creation is handled by EnsureCreated method
         Console.WriteLine("Table created.");
     }
+}
+
+public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+     public DbSet<User> Users { get; set; }
 }
 
 public class User
